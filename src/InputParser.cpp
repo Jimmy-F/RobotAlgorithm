@@ -6,7 +6,6 @@
  */
 
 #include "InputParser.hpp"
-#include "ObjectFinder.hpp"
 
 InputParser::InputParser() :
 		incommingInput(), closeProgram(false),parsingComplete(false), color(""),shape("") {
@@ -34,7 +33,7 @@ void InputParser::checkInput() {
 		}
 	}
 	if(parsingComplete) {
-		ObjectFinder objectFinder(color,shape);
+		//ObjectFinder objectFinder(color,shape);
 		parsingComplete = false;
 	}
 }

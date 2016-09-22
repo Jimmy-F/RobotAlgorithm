@@ -2,8 +2,8 @@
 // Created by jimmy on 21-9-16.
 //
 
-#ifndef ROBOTALGORITHM_DETECTOR_H
-#define ROBOTALGORITHM_DETECTOR_H
+#ifndef ROBOTALGORITHM_DETECTOR_HPP
+#define ROBOTALGORITHM_DETECTOR_HPP
 
 #include <math.h>
 #include <string>
@@ -12,7 +12,7 @@
 
 class Detector {
 public:
-    Detector();
+    Detector(const std::string shape, const std::string color);
     /**
      *
      * @param img The image where the shapes are to be found.
@@ -20,14 +20,14 @@ public:
      * @param color The color of the shape to find. This must be either "rood", "groen", "blauw", "geel", "zwart" or "wit.
      * @return The shapes that were found.
      */
-    std::vector<std::vector<cv::Point> > findShapes(cv::Mat& img, const std::string shape, const std::string color);
+    std::vector<std::vector<cv::Point> > findShapes(cv::Mat& img);
 
     /**
      * Draws the contours on an image.
      * @param img The image to draw the contours on.
      * @param contour The contours to draw.
      */
-    void markContours(cv::Mat& img, std::vector<cv::Point>& contour);
+    void markContours(cv::Mat& img, std::vector<cv::Point>& contour, cv::Scalar color);
 
     /**
      * Gets the x and y coordinates of a shape(contour)
@@ -89,10 +89,12 @@ private:
      * @param color The color to set the min and max range from.
      */
     void setMinAndMaxColor(const std::string color);
+    std::string shape;
+    std::string color;
     cv::Scalar minColor;
     cv::Scalar maxColor;
 
 };
 
 
-#endif //ROBOTALGORITHM_DETECTOR_H
+#endif //ROBOTALGORITHM_DETECTOR_HPP

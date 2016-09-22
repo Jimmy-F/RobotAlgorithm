@@ -14,6 +14,7 @@ int main() {
 	while (true) {
 		inputParser.setIncommingInput(cv::waitKey());
 		inputParser.checkInput();
+		std::cout << cv::waitKey() << std::endl;
 		if(inputParser.getCloseProgram()) {
 			return 0;
 		}
