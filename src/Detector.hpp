@@ -2,8 +2,8 @@
 // Created by jimmy on 21-9-16.
 //
 
-#ifndef ROBOTALGORITHM_DETECTOR_H
-#define ROBOTALGORITHM_DETECTOR_H
+#ifndef ROBOTALGORITHM_DETECTOR_HPP
+#define ROBOTALGORITHM_DETECTOR_HPP
 
 #include <math.h>
 #include <string>
@@ -95,4 +95,4 @@ private:
 };
 
 
-#endif //ROBOTALGORITHM_DETECTOR_H
+#endif //ROBOTALGORITHM_DETECTOR_HPP

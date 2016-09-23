@@ -10,38 +10,28 @@
 
 #include <vector>
 #include <iostream>
-#include <string>
+#include <sstream>
 
 class InputParser {
 public:
 	InputParser();
 	virtual ~InputParser();
-	void setIncommingInput(unsigned char key);
-	void checkInput();
-
-	void checkForWordExit(std::vector<unsigned char> input);
-	void checkForWordHalveCircel(std::vector<unsigned char> input);
-	void checkForWordCircel(std::vector<unsigned char> input);
-	void checkForWordRechthoek(std::vector<unsigned char> input);
-	void checkForWordVierkant(std::vector<unsigned char> input);
-	void checkForWordDriehoek(std::vector<unsigned char> input);
-
-	void checkForColorWit(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorRood(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorGroen(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorBlauw(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorZwart(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorGeel(const unsigned char startPosition,std::vector<unsigned char> input);
-
-	bool arrayCompare(unsigned char arrayOne[],unsigned char arrayTwo[],unsigned char arrayLength);
-
+	void parseInput(std::stringstream& input);
 	bool getCloseProgram();
+	void initColorList();
+	void initShapeList();
+
+	void checkForWordExit(std::string input);
+	void checkForWordHalveCircel(std::stringstream& input);
+	void searchForColor(std::stringstream& input);
 private:
-	std::vector<unsigned char> incommingInput;
 	bool closeProgram;
 	bool parsingComplete;
 	std::string color;
 	std::string shape;
+	std::vector<std::string> parsedInput;
+ 	std::vector<std::string> colorList;
+	std::vector<std::string> shapeList;
 };
 
 #endif /* SRC_InputParser_HPP_ */
