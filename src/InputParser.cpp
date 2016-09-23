@@ -12,11 +12,9 @@ InputParser::InputParser() :
 		closeProgram(false), parsingComplete(false), color(""), shape(""),parsedInput() {
 	initColorList();
 	initShapeList();
-	// TODO Auto-generated constructor stub
 }
 
 InputParser::~InputParser() {
-	// TODO Auto-generated destructor stub
 }
 
 void InputParser::parseInput(std::stringstream& input) {
