@@ -43,8 +43,10 @@ public:
      */
     double getSurface(std::vector<cv::Point>& contour);
 
-protected:
     ~Detector();
+
+protected:
+
 
 private:
     /**
