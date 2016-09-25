@@ -16,15 +16,48 @@ class InputParser {
 public:
 	InputParser();
 	virtual ~InputParser();
+	/**
+	 * Parses the console input.
+	 * @Param input A stringstream with user input.
+	 */
 	void parseInput(std::stringstream& input);
+
+	/**
+	 * Gets the boolean that decides if the program must be terminated.
+	 * @return A boolean that decides if the program must be terminated.
+	 */
 	bool getCloseProgram();
+
+private:
+	/**
+	 * Initializes the colors for the input parser.
+	 */
 	void initColorList();
+
+
+	/**
+	 * Initializes the shapes for the input parser.
+	 */
 	void initShapeList();
 
+	/**
+	 * Searches for the word Exit in the given string.
+	 * @param input A string with parsed user input.
+	 */
 	void checkForWordExit(std::string input);
+
+	/**
+	 * Checks the input variable for the word Circel.
+	 * @param input A stringstream with user input.
+	 */
 	void checkForWordHalveCircel(std::stringstream& input);
+
+	/**
+	 * Searches the user input for colors.
+	 * @param input A stringstream with user input.
+	 */
 	void searchForColor(std::stringstream& input);
-private:
+
 	bool closeProgram;
 	bool parsingComplete;
 	std::string color;
