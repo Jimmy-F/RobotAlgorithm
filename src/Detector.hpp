@@ -23,13 +23,6 @@ public:
     std::vector<std::vector<cv::Point> > findShapes(cv::Mat& img);
 
     /**
-     * Draws the contours on an image.
-     * @param img The image to draw the contours on.
-     * @param contour The contours to draw.
-     */
-    void markContours(cv::Mat& img, std::vector<cv::Point>& contour, cv::Scalar color);
-
-    /**
      * Gets the x and y coordinates of a shape(contour)
      * @param contour The contour/shape to get the x/y coordinate from.
      * @return A pair with two ints aka the x and y coordinates.
@@ -43,30 +36,19 @@ public:
      */
     double getSurface(std::vector<cv::Point>& contour);
 
+    cv::Mat getFilteredImg(cv::Mat& img);
+
     ~Detector();
 
 protected:
 
 
 private:
-    /**
-     * Gets the surface of a circle.
-     * @param contour The contours to get the surface from.
-     * @return The surface of the circle.
-     */
-    double getSurfaceCircle(std::vector<cv::Point>& contour);
-    /**
-     * Gets the surface of a rectangle.
-     * @param contour The contours of the rectangle.
-     * @return Surface of the rectangle.
-     */
-    double getSurfaceRectangle(std::vector<cv::Point>& contour);
-    /**
-     * Gets the surface of a triangle
-     * @param contour The contours of the triangle
-     * @return The surface of the triangle.
-     */
-    double getSurfaceTriangle(std::vector<cv::Point>& contour);
+
+    void findRect(cv::Mat& img);
+    void findCircle(cv::Mat& img);
+    void findSquare(cv::Mat& img);
+    void findTriangle(cv::Mat& img);
     /**
      * Sets a label at the center of a shape/contour
      * @param im The image to draw/write the label on.
