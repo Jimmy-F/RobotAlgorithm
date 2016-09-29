@@ -10,38 +10,61 @@
 
 #include <vector>
 #include <iostream>
-#include <string>
+#include <sstream>
 
 class InputParser {
 public:
 	InputParser();
 	virtual ~InputParser();
-	void setIncommingInput(unsigned char key);
-	void checkInput();
+	/**
+	 * Parses the console input.
+	 * @Param input A stringstream with user input.
+	 */
+	void parseInput(std::stringstream& input);
 
-	void checkForWordExit(std::vector<unsigned char> input);
-	void checkForWordHalveCircel(std::vector<unsigned char> input);
-	void checkForWordCircel(std::vector<unsigned char> input);
-	void checkForWordRechthoek(std::vector<unsigned char> input);
-	void checkForWordVierkant(std::vector<unsigned char> input);
-	void checkForWordDriehoek(std::vector<unsigned char> input);
-
-	void checkForColorWit(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorRood(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorGroen(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorBlauw(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorZwart(const unsigned char startPosition,std::vector<unsigned char> input);
-	void checkForColorGeel(const unsigned char startPosition,std::vector<unsigned char> input);
-
-	bool arrayCompare(unsigned char arrayOne[],unsigned char arrayTwo[],unsigned char arrayLength);
-
+	/**
+	 * Gets the boolean that decides if the program must be terminated.
+	 * @return A boolean that decides if the program must be terminated.
+	 */
 	bool getCloseProgram();
+
 private:
-	std::vector<unsigned char> incommingInput;
+	/**
+	 * Initializes the colors for the input parser.
+	 */
+	void initColorList();
+
+
+	/**
+	 * Initializes the shapes for the input parser.
+	 */
+	void initShapeList();
+
+	/**
+	 * Searches for the word Exit in the given string.
+	 * @param input A string with parsed user input.
+	 */
+	void checkForWordExit(std::string input);
+
+	/**
+	 * Checks the input variable for the word Circel.
+	 * @param input A stringstream with user input.
+	 */
+	void checkForWordHalveCircel(std::stringstream& input);
+
+	/**
+	 * Searches the user input for colors.
+	 * @param input A stringstream with user input.
+	 */
+	void searchForColor(std::stringstream& input);
+
 	bool closeProgram;
 	bool parsingComplete;
 	std::string color;
 	std::string shape;
+	std::vector<std::string> parsedInput;
+ 	std::vector<std::string> colorList;
+	std::vector<std::string> shapeList;
 };
 
 #endif /* SRC_InputParser_HPP_ */
