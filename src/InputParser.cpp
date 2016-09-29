@@ -28,6 +28,7 @@ void InputParser::parseInput(std::stringstream& input) {
 			}
 			else {
 				shape = shapeList[i];
+				std::cout << shape << std::endl;
 				searchForColor(input);
 			}
 		}
@@ -40,6 +41,7 @@ void InputParser::searchForColor(std::stringstream& input) {
 	for(unsigned char i = 0; i < colorList.size(); i++) {
 		if(inputColor == colorList[i]) {
 			color = colorList[i];
+			std::cout << color << std::endl;
 		}
 	}
 }
@@ -49,6 +51,7 @@ void InputParser::checkForWordHalveCircel(std::stringstream& input) {
 	input >> inputShape;
 	if(inputShape == "circel") {
 		shape = "halve circel";
+		std::cout << shape << std::endl;
 		searchForColor(input);
 	}
 }
