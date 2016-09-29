@@ -12,7 +12,7 @@
 
 class Detector {
 public:
-    Detector(const std::string shape, const std::string color);
+    Detector(const std::string shape, const std::string color, const double aScale);
     /**
      *
      * @param img The image where the shapes are to be found.
@@ -45,10 +45,11 @@ protected:
 
 private:
 
-    void findRect(cv::Mat& img);
-    void findCircle(cv::Mat& img);
-    void findSquare(cv::Mat& img);
-    void findTriangle(cv::Mat& img);
+    void findRect(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    void findSquare(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    void findCircle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    void findSemiCircle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    void findTriangle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
     /**
      * Sets a label at the center of a shape/contour
      * @param im The image to draw/write the label on.
@@ -77,6 +78,7 @@ private:
     std::string color;
     cv::Scalar minColor;
     cv::Scalar maxColor;
+    double scale;
 
 };
 
