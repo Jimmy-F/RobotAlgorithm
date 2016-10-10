@@ -8,65 +8,16 @@
 #include "InputParser.hpp"
 #include "Detector.hpp"
 
-InputParser::InputParser() :
-		closeProgram(false), parsingComplete(false), color(""), shape(""),parsedInput() {
+
+InputParser::InputParser(std::string image) :
+		closeProgram(false), parsingComplete(false), color(""), shape(""),parsedInput()  {
+	img = image;
 	initColorList();
 	initShapeList();
 }
 
 InputParser::~InputParser() {
 }
-
-void InputParser::setIncommingInput(unsigned char key) {
-	incommingInput.push_back(key);
-}
-
-void InputParser::checkInput() {
-	for (auto &i : incommingInput) {
-		if (i == 13) { //13 is Enter
-			checkForWordExit(incommingInput);
-			checkForWordCircel(incommingInput);
-			checkForWordRechthoek(incommingInput);
-			checkForWordHalveCircel(incommingInput);
-			checkForWordVierkant(incommingInput);
-			checkForWordDriehoek(incommingInput);
-			incommingInput.clear();
-		}
-	}
-	if(parsingComplete) {
-		//ObjectFinder objectFinder(color,shape);
-		parsingComplete = false;
-	}
-}
-
-void InputParser::checkForWordExit(std::vector<unsigned char> input) {
-	const unsigned char arrayLength = 5;
-	unsigned char wordExit[arrayLength] = { 'e', 'x', 'i', 't', 13 };
-	unsigned char foundWord[arrayLength];
-	for (unsigned char i = 0; i < arrayLength; i++) {
-		if (input[i] == wordExit[i]) {
-			foundWord[i] = input[i];
-		}
-		else {
-			break;
-		}
-	}
-	if (arrayCompare(wordExit, foundWord, arrayLength)) {
-		closeProgram = true;
-	}
-}
-
-bool InputParser::getCloseProgram() {
-	return closeProgram;
-}
-
-void InputParser::checkForWordCircel(std::vector<unsigned char> input) {
-	const unsigned char arrayLength = 7;
-	unsigned char wordExit[arrayLength] = { 'c', 'i', 'r', 'c', 'e', 'l', 32 };
-	unsigned char foundWord[arrayLength];
-	for (unsigned char i = 0; i < arrayLength; i++) {
-		if (input[i] == wordExit[i]) {
-			foundWord[i] = input[i];
 
 void InputParser::parseInput(std::stringstream& input) {
 	std::string inputShape;
@@ -79,7 +30,7 @@ void InputParser::parseInput(std::stringstream& input) {
 			}
 			else {
 				shape = shapeList[i];
-				std::cout << shape << std::endl;
+				std::cout << shape << " ";
 				searchForColor(input);
 			}
 		}
@@ -93,6 +44,12 @@ void InputParser::searchForColor(std::stringstream& input) {
 		if(inputColor == colorList[i]) {
 			color = colorList[i];
 			std::cout << color << std::endl;
+			Detector d(shape, color, 3);
+			cv::Mat image = cv::imread(img,1);
+			d.findShapes(image);
+			if (cv::waitKey(10) == 27)
+			cv::destroyAllWindows();
+			break;
 		}
 	}
 }

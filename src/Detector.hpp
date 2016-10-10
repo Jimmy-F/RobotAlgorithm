@@ -20,7 +20,7 @@ public:
      * @param color The color of the shape to find. This must be either "rood", "groen", "blauw", "geel", "zwart" or "wit.
      * @return The shapes that were found.
      */
-    std::vector<std::vector<cv::Point> > findShapes(cv::Mat& img);
+    void findShapes(cv::Mat& img);
 
     /**
      * Gets the x and y coordinates of a shape(contour)
@@ -36,8 +36,6 @@ public:
      */
     double getSurface(std::vector<cv::Point>& contour);
 
-    cv::Mat getFilteredImg(cv::Mat& img);
-
     ~Detector();
 
 protected:
@@ -45,11 +43,48 @@ protected:
 
 private:
 
-    void findRect(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
-    void findSquare(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
-    void findCircle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
-    void findSemiCircle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
-    void findTriangle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    /**
+     * Filters the image so it can be used to find shapes
+     * @param img The image to filter
+     * @return The filtered image.
+     */
+    cv::Mat getFilteredImg(cv::Mat& img);
+
+    /**
+     * Tries to find a rectangle from the given contours.
+     * @param img The image to draw the rectangle in.
+     * @param contours the previously found contours.
+     * @param hierarchy the hierarchy of the contours.
+     */
+    bool findRect(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    /**
+     * Tries to find a square from the given contours.
+     * @param img The image to draw the square in.
+     * @param contours The found contours.
+     * @param hierarchy The hierarchy of the contours.
+     */
+    bool findSquare(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    /**
+     * Tries to find a circle from the found contours.
+     * @param img The image to draw the circle in.
+     * @param contours the found contours.
+     * @param hierarchy The hierarchy of the found contours.
+     */
+    bool findCircle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    /**
+     * Tries to find semi/half of a circle.
+     * @param img The image to draw the semi circle on.
+     * @param contours The found contours.
+     * @param hierarchy The hierarchy of the found contours.
+     */
+    bool findSemiCircle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
+    /**
+     * Tries to find a triangle from the contours.
+     * @param img The image to draw the triangle on.
+     * @param contours The found contours
+     * @param hierarchy The hierarchy of the found contours.
+     */
+    bool findTriangle(cv::Mat& img, std::vector<std::vector<cv::Point>> contours, std::vector<cv::Vec4i> hierarchy);
     /**
      * Sets a label at the center of a shape/contour
      * @param im The image to draw/write the label on.

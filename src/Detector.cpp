@@ -15,26 +15,36 @@ Detector::Detector(const std::string aShape, const std::string aColor, const dou
 	maxColor = range.second;
 }
 
-std::vector<std::vector<cv::Point> > Detector::findShapes(cv::Mat& img) {
+void Detector::findShapes(cv::Mat& img) {
 
 	//TODO filter and return the contours.
 	cv::Mat thresh = getFilteredImg(img);
 	std::vector<std::vector<cv::Point> > contours;
 	std::vector<cv::Vec4i> hierarchy;
+	cv::Mat dst = img;
 	clock_t startTime = clock();
 	cv::findContours(thresh.clone(), contours, hierarchy, CV_RETR_LIST,
 			CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 
+	double nPixels = img.total() * 2.54 / 96;
+	std::cout << "Amount of cm: " << nPixels << std::endl;
+
+	bool shapesfound;
+
 	if (shape == "vierkant") {
-		findSquare(img, contours, hierarchy);
+		shapesfound = findSquare(dst, contours, hierarchy);
 	} else if (shape == "rechthoek") {
-		findRect(img, contours, hierarchy);
+		shapesfound = findRect(dst, contours, hierarchy);
 	} else if (shape == "circel") {
-		findCircle(img, contours, hierarchy);
+		shapesfound = findCircle(dst, contours, hierarchy);
 	} else if (shape == "halve circel") {
-		findSemiCircle(img, contours, hierarchy);
+		shapesfound = findSemiCircle(dst, contours, hierarchy);
 	} else if (shape == "driehoek") {
-		findTriangle(img, contours, hierarchy);
+		shapesfound = findTriangle(dst, contours, hierarchy);
+	}
+
+	if (!shapesfound) {
+		std::cout << shape << " " << color << " is niet gevonden!" << std::endl;
 	}
 
 	clock_t endTime = clock();
@@ -43,15 +53,8 @@ std::vector<std::vector<cv::Point> > Detector::findShapes(cv::Mat& img) {
 	std::cout << "Tijd: " << timeInSeconds << std::endl;
 	std::cout << "Ticks: " << clockTicksTaken << std::endl;
 
-	std::vector<cv::Point> approx;
-
-	std::vector<std::vector<cv::Point>> ret_contours;
-
-	if (ret_contours.size() == 0) {
-		std::cout << "Er zijn geen objecten gevonden van het gegeven type"
-				<< std::endl;
-	}
-	return ret_contours;
+	cv::namedWindow("Image", CV_WINDOW_AUTOSIZE);
+	cv::imshow("Image", dst);
 }
 
 std::pair<double, double> Detector::getCenter(std::vector<cv::Point>& contour) {
@@ -66,7 +69,7 @@ std::pair<double, double> Detector::getCenter(std::vector<cv::Point>& contour) {
 }
 
 double Detector::getSurface(std::vector<cv::Point>& contour) {
-	return cv::contourArea(contour) / scale;
+	return cv::contourArea(contour);
 }
 
 cv::Mat Detector::getFilteredImg(cv::Mat& img) {
@@ -74,8 +77,6 @@ cv::Mat Detector::getFilteredImg(cv::Mat& img) {
 	cv::Mat blurred_img;
 	cv::GaussianBlur(img, blurred_img, cv::Size(5, 5), 1.5, 1.5);
 	cv::medianBlur(blurred_img, blurred_img, 9);
-	cv::namedWindow("Filter_b", CV_WINDOW_AUTOSIZE);
-	imshow("Filter_b", blurred_img);
 
 	//cv::GaussianBlur(blokjes, blur_blokjes, cv::Size(5,5), 5, 5);
 	cv::cvtColor(blurred_img, blurred_img, cv::COLOR_BGR2HSV);
@@ -92,9 +93,7 @@ cv::Mat Detector::getFilteredImg(cv::Mat& img) {
 		cv::inRange(blurred_img, minColor, maxColor, thresh);
 	}
 	cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(9,9),cv::Point(-1,-1));
-	cv::dilate(thresh, thresh, element);
-	cv::namedWindow("Filter", CV_WINDOW_AUTOSIZE);
-	imshow("Filter", thresh);
+	//cv::dilate(thresh, thresh, element);
 	return thresh;
 }
 
@@ -102,11 +101,12 @@ Detector::~Detector() {
 
 }
 
-void Detector::findSquare(cv::Mat& img,
+bool Detector::findSquare(cv::Mat& img,
 		std::vector<std::vector<cv::Point>> contours,
 		std::vector<cv::Vec4i> hierarchy) {
 
 	std::vector<cv::Point> approx;
+	bool ret = false;
 
 	for (unsigned int i = 0; i < contours.size(); i++) {
 		// Approximate contour with accuracy proportional
@@ -151,14 +151,17 @@ void Detector::findSquare(cv::Mat& img,
 						<< std::endl;
 				cv::drawContours(img, contours, i, cv::Scalar(200, 200, 200), 2,
 						8, hierarchy, 0);
+				ret = true;
 			}
 		}
 	}
+	return ret;
 }
-void Detector::findRect(cv::Mat& img,
+ bool Detector::findRect(cv::Mat& img,
 		std::vector<std::vector<cv::Point>> contours,
 		std::vector<cv::Vec4i> hierarchy) {
 
+	 bool ret = false;
 	std::vector<cv::Point> approx;
 
 	for (unsigned int i = 0; i < contours.size(); i++) {
@@ -205,17 +208,20 @@ void Detector::findRect(cv::Mat& img,
 						<< std::endl;
 				cv::drawContours(img, contours, i, cv::Scalar(200, 200, 200), 2,
 						8, hierarchy, 0);
-
+				ret = true;
 			}
 
 		}
 	}
+	return ret;
 }
-void Detector::findCircle(cv::Mat& img,
+bool Detector::findCircle(cv::Mat& img,
 		std::vector<std::vector<cv::Point>> contours,
 		std::vector<cv::Vec4i> hierarchy) {
 
 	std::vector<cv::Point> approx;
+
+	bool ret = false;
 
 	for (unsigned int i = 0; i < contours.size(); i++) {
 		// Approximate contour with accuracy proportional
@@ -248,17 +254,17 @@ void Detector::findCircle(cv::Mat& img,
 				std::cout << "y: " << c.second << std::endl;
 				std::cout << "surface: " << getSurface(contours[i])
 						<< std::endl;
+				ret = true;
 			}
-
-
 	}
+	return ret;
 }
-void Detector::findSemiCircle(cv::Mat& img,
+bool Detector::findSemiCircle(cv::Mat& img,
 		std::vector<std::vector<cv::Point>> contours,
 		std::vector<cv::Vec4i> hierarchy) {
 
 	std::vector<cv::Point> approx;
-
+	bool ret = false;
 	for (unsigned int i = 0; i < contours.size(); i++) {
 		// Approximate contour with accuracy proportional
 		// to the contour perimeter
@@ -288,16 +294,18 @@ void Detector::findSemiCircle(cv::Mat& img,
 			std::cout << "x: " << c.first << std::endl;
 			std::cout << "y: " << c.second << std::endl;
 			std::cout << "surface: " << getSurface(contours[i]) << std::endl;
+			ret = true;
 		}
 
 	}
+	return ret;
 }
 
-void Detector::findTriangle(cv::Mat& img,
+bool Detector::findTriangle(cv::Mat& img,
 		std::vector<std::vector<cv::Point>> contours,
 		std::vector<cv::Vec4i> hierarchy) {
 	std::vector<cv::Point> approx;
-
+	bool ret = false;
 	for (unsigned int i = 0; i < contours.size(); i++) {
 		// Approximate contour with accuracy proportional
 		// to the contour perimeter
@@ -323,13 +331,16 @@ void Detector::findTriangle(cv::Mat& img,
 			std::cout << "surface: " << getSurface(contours[i]) << std::endl;
 			cv::Point bottomCenter = (approx[2] + approx[0]) * 0.5;
 			cv::Point center = (bottomCenter + approx[1]) * 0.5;
-			cv::circle(img, center, 3, cv::Scalar(0,0,0), 1, 8 , 0);
+
 			int baseline = 0;
+			std::string txt = "("+ std::to_string((long)c.first) + "," + std::to_string((long)c.second) + ")";
 			cv::Size text = cv::getTextSize("Text", cv::FONT_HERSHEY_SIMPLEX, 0.3, 1, &baseline);
 			cv::rectangle(img, center + cv::Point(0,baseline), center + cv::Point(text.width, -text.height), CV_RGB(255,255,255));
-			cv::putText(img, "Text", center, cv::FONT_HERSHEY_SIMPLEX, 0.3, CV_RGB(0,0,0), 1, 8);
+			cv::putText(img, txt, center, cv::FONT_HERSHEY_SIMPLEX, 0.3, CV_RGB(0,0,0), 1, 8);
+			ret = true;
 		}
 	}
+	return ret;
 }
 
 void Detector::setLabel(cv::Mat& im, const std::string label,

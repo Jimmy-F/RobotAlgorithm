@@ -11,10 +11,11 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <opencv2/highgui/highgui.hpp>
 
 class InputParser {
 public:
-	InputParser();
+	InputParser(std::string image);
 	virtual ~InputParser();
 	/**
 	 * Parses the console input.
@@ -65,6 +66,7 @@ private:
 	std::vector<std::string> parsedInput;
  	std::vector<std::string> colorList;
 	std::vector<std::string> shapeList;
+	std::string img;
 };
 
 #endif /* SRC_InputParser_HPP_ */

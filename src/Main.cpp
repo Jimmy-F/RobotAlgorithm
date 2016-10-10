@@ -8,17 +8,16 @@
 #include <fstream>
 
 #include "InputParser.hpp"
+#include "Detector.hpp"
 
 int main(int argc, char* argv[]) {
-	InputParser inputParser;
+	InputParser inputParser("/home/jimmy/Pictures/vormpjes.jpg");
+	//cv::Mat img = cv::imread("/home/jimmy/Pictures/vormpjes.jpg",1);
 
-<<<<<<< HEAD
-	while (true) {
-		inputParser.setIncommingInput(cv::waitKey());
-		inputParser.checkInput();
-		std::cout << cv::waitKey() << std::endl;
-		if(inputParser.getCloseProgram()) {
-=======
+	cv::namedWindow("Image", CV_WINDOW_AUTOSIZE);
+
+	//cv::waitKey(0);
+
 	if (argc > 2) {
 		std::cout << "You only need to supply one argument to this program.";
 		return 0;
@@ -40,7 +39,6 @@ int main(int argc, char* argv[]) {
 				inputParser.parseInput(inputStringBatch);
 			}
 			batchFile.close();
->>>>>>> 606ff157353af8361f07a6e03118f54787bf579a
 			return 0;
 		}
 	} else {
